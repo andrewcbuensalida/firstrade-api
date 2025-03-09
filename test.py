@@ -1,6 +1,7 @@
 from firstrade import account, order, symbols
 import os
 from dotenv import load_dotenv
+
 # Load environment variables from a .env file
 load_dotenv()
 
@@ -63,15 +64,20 @@ for item in positions["items"]:
         f"Quantity {item["quantity"]} of security {item["symbol"]} held in account {ft_accounts.account_numbers[0]}"
     )
 
-# Get account history (past 200)
-history = ft_accounts.get_account_history(
-    account=ft_accounts.account_numbers[0],
-    date_range="cust",
-    custom_range=["2024-01-01", "2024-06-30"]
-)
 
-for item in history["items"]:
-    print(f"Transaction: {item["symbol"]} on {item["report_date"]} for {item["amount"]}.")
+# Not working
+# print("Getting account history...")
+# # Get account history (past 200)
+# history = ft_accounts.get_account_history(
+#     account=ft_accounts.account_numbers[0],
+#     date_range="cust",
+#     custom_range=["2024-01-01", "2024-06-30"]
+# )
+# print('this is history')
+# print(history)
+
+# for item in history["items"]:
+#     print(f"Transaction: {item["symbol"]} on {item["report_date"]} for {item["amount"]}.")
 
 
 # Create an order object.
@@ -81,7 +87,7 @@ ft_order = order.Order(ft_ss)
 order_conf = ft_order.place_order(
     ft_accounts.account_numbers[0],
     symbol="INTC",
-    price_type=order.PriceType.LIMIT,
+    price_type=order.PriceType.MARKET,
     order_type=order.OrderType.BUY,
     duration=order.Duration.DAY,
     quantity=1,
@@ -108,34 +114,34 @@ else:
 recent_orders = ft_accounts.get_orders(ft_accounts.account_numbers[0])
 print(recent_orders)
 
-# Get option dates
-option_first = symbols.OptionQuote(ft_ss, "INTC")
-for item in option_first.option_dates["items"]:
-    print(f"Expiration Date: {item["exp_date"]} Days Left: {item["day_left"]} Expiration Type: {item["exp_type"]}")
+# # Get option dates
+# option_first = symbols.OptionQuote(ft_ss, "INTC")
+# for item in option_first.option_dates["items"]:
+#     print(f"Expiration Date: {item["exp_date"]} Days Left: {item["day_left"]} Expiration Type: {item["exp_type"]}")
 
-# Get option quote
-option_quote = option_first.get_option_quote("INTC", option_first.option_dates["items"][0]["exp_date"])
-print(option_quote)
+# # Get option quote
+# option_quote = option_first.get_option_quote("INTC", option_first.option_dates["items"][0]["exp_date"])
+# print(option_quote)
 
-# Get option greeks
-option_greeks = option_first.get_greek_options("INTC", option_first.option_dates["items"][0]["exp_date"])
-print(option_greeks)
+# # Get option greeks
+# option_greeks = option_first.get_greek_options("INTC", option_first.option_dates["items"][0]["exp_date"])
+# print(option_greeks)
 
-print(f"Placing dry option order for {option_quote["items"][0]["opt_symbol"]} with a price of {option_quote["items"][0]["ask"]}.")
-print("Symbol readable ticker 'INTC'")
+# print(f"Placing dry option order for {option_quote["items"][0]["opt_symbol"]} with a price of {option_quote["items"][0]["ask"]}.")
+# print("Symbol readable ticker 'INTC'")
 
-# Place dry option order
-option_order = ft_order.place_option_order(
-    account=ft_accounts.account_numbers[0],
-    option_symbol=option_quote["items"][0]["opt_symbol"],
-    order_type=order.OrderType.BUY_OPTION,
-    price_type=order.PriceType.MARKET,
-    duration=order.Duration.DAY,
-    contracts=1,
-    dry_run=True,
-)
+# # Place dry option order
+# option_order = ft_order.place_option_order(
+#     account=ft_accounts.account_numbers[0],
+#     option_symbol=option_quote["items"][0]["opt_symbol"],
+#     order_type=order.OrderType.BUY_OPTION,
+#     price_type=order.PriceType.MARKET,
+#     duration=order.Duration.DAY,
+#     contracts=1,
+#     dry_run=True,
+# )
 
-print(option_order)
+# print(option_order)
 
 # Delete cookies
 ft_ss.delete_cookies()
