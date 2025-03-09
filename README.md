@@ -1,3 +1,47 @@
+## Setup
+
+1. Unzip python zip file
+
+2. Edit [`config.ini`](EtradePythonClient/etrade_python_client/config.ini)
+with your consumer key and consumer secret; copy these from your application's keys' section
+
+3. Create the virtual environment by running the Python's venv command; see the command syntax below
+
+```
+$ python -m venv .venv
+```
+
+4. Activate the Python virtual environment
+
+On Windows, run:
+
+```
+$ .venv\Scripts\activate.bat
+```
+
+On Unix or Mac OS, run:
+
+```
+$ source .venv/bin/activate
+```
+
+5. Use pip to install dependencies for the sample application
+
+```
+$ pip install -r requirements.txt
+```
+
+To save dependencies
+
+pip freeze > requirements.txt
+
+6. Run the sample application
+
+```
+$ python test.py
+```
+
+
 # firstrade-api
 
 A reverse-engineered python API to interact with the Firstrade Trading platform.

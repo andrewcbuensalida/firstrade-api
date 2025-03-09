@@ -1,7 +1,16 @@
 from firstrade import account, order, symbols
+import os
+from dotenv import load_dotenv
+# Load environment variables from a .env file
+load_dotenv()
 
 # Create a session
-ft_ss = account.FTSession(username="", password="", email = "", profile_path="")
+ft_ss = account.FTSession(
+    username=os.getenv("FT_USERNAME"),
+    password=os.getenv("FT_PASSWORD"),
+    profile_path="",
+    pin=os.getenv("FT_PIN"),
+)
 need_code = ft_ss.login()
 if need_code:
     code = input("Please enter the pin sent to your email/phone: ")
@@ -47,11 +56,11 @@ print(f"Fractional: {quote.is_fractional}")
 print(f"Company Name: {quote.company_name}")
 
 # Get positions and print them out for an account.
-positions = ft_accounts.get_positions(account=ft_accounts.account_numbers[1])
+positions = ft_accounts.get_positions(account=ft_accounts.account_numbers[0])
 print(positions)
 for item in positions["items"]:
     print(
-        f"Quantity {item["quantity"]} of security {item["symbol"]} held in account {ft_accounts.account_numbers[1]}"
+        f"Quantity {item["quantity"]} of security {item["symbol"]} held in account {ft_accounts.account_numbers[0]}"
     )
 
 # Get account history (past 200)
@@ -92,14 +101,14 @@ else:
 # Cancel placed order
 # cancel = ft_accounts.cancel_order(order_conf['result']["order_id"])
 # if cancel["result"]["result"] == "success":
-    # print("Order cancelled successfully.")
+# print("Order cancelled successfully.")
 # print(cancel)
 
 # Check orders
 recent_orders = ft_accounts.get_orders(ft_accounts.account_numbers[0])
 print(recent_orders)
 
-#Get option dates
+# Get option dates
 option_first = symbols.OptionQuote(ft_ss, "INTC")
 for item in option_first.option_dates["items"]:
     print(f"Expiration Date: {item["exp_date"]} Days Left: {item["day_left"]} Expiration Type: {item["exp_type"]}")
